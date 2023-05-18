@@ -25,7 +25,7 @@ routes.post ('/login', async (req, res) => {
           expiresIn: '1h',
         }
       );
-      res.status (200).send (token);
+      res.status (200).send ({token});
     } else {
       res.status (401).send ('Unauthorized');
     }

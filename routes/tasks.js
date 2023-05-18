@@ -35,7 +35,7 @@ routes.get ('/', async (req, res) => {
 routes.post ('/', async (req, res) => {
   const {title, place, mdContent, endDate} = req.body;
   const user = jwt.verify (_token, 'token');
-  if ((user, title)) {
+  if (user && title && place && mdContent) {
     await prisma.task.create ({
       data: {
         place,
@@ -45,6 +45,7 @@ routes.post ('/', async (req, res) => {
         owner: {
           connect: {
             id: user.id,
+            email: user.email,
           },
         },
       },
@@ -52,7 +53,7 @@ routes.post ('/', async (req, res) => {
     const tasks = await prisma.task.findMany ({
       where: {ownerId: user.id},
     });
-    res.status (201).json (tasks);
+    res.status (201).json ({tasks});
   } else {
     res.status (400).send ('Bad Request');
   }

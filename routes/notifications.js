@@ -33,7 +33,7 @@ routes.get ('/', async (req, res) => {
 routes.post ('/', async (req, res) => {
   const {content} = req.body;
   const user = jwt.verify (_token, 'token');
-  if ((user, title)) {
+  if (user && content) {
     await prisma.notification.create ({
       data: {
         content,

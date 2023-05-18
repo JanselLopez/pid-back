@@ -4,7 +4,6 @@ const cookieParser = require ('cookie-parser');
 const app = express ();
 const PORT = 3010;
 //routes
-const userRoute = require ('./routes/users');
 const authRoute = require ('./routes/auth');
 const tasksRoute = require ('./routes/tasks');
 const notificationsRoute = require ('./routes/notifications');
@@ -21,8 +20,6 @@ app.use ('/auth', authRoute);
 app.use ((req, res, next) => {
   next ();
 });
-
-app.use ('/users', userRoute);
 
 app.use ('/tasks', tasksRoute);
 
