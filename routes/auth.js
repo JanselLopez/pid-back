@@ -22,7 +22,7 @@ routes.post ('/login', async (req, res) => {
         },
         'token',
         {
-          expiresIn: '1h',
+          expiresIn: '24h',
         }
       );
       res.status (200).send ({token});

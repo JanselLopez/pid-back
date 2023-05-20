@@ -22,6 +22,7 @@ model Task{
   place String
   title String
   mdContent String
+  importance Int
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
 }

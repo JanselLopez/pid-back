@@ -17,10 +17,9 @@ routes.use ((req, res, next) => {
 // GET
 routes.get ('/', async (req, res) => {
   if (_token) {
-    const {ownerId} = req.body;
     const user = jwt.verify (_token, 'token');
     const tasks = await prisma.task.findMany ({
-      where: {ownerId},
+      where: {ownerId: user.id},
     });
     res.json ({
       userAuth: user,
@@ -33,19 +32,20 @@ routes.get ('/', async (req, res) => {
 
 // POST
 routes.post ('/', async (req, res) => {
-  const {title, place, mdContent, endDate} = req.body;
-  const user = jwt.verify (_token, 'token');
-  if (user && title && place && mdContent) {
+  const {title, place, mdContent, endDate, importance} = req.body;
+  const {user} = jwt.verify (_token, 'token');
+  console.log ({user, title, place, mdContent, importance});
+  if (user && title && place && mdContent && importance) {
     await prisma.task.create ({
       data: {
         place,
         endDate,
         title,
         mdContent,
+        importance,
         owner: {
           connect: {
             id: user.id,
-            email: user.email,
           },
         },
       },
@@ -60,14 +60,15 @@ routes.post ('/', async (req, res) => {
 });
 
 routes.put ('/', async (req, res) => {
-  const {id} = req.params;
-  const {endDate, place, mdContent} = req.body;
+  const {id} = req.query;
+  const {mdContent} = req.body;
   const user = jwt.verify (_token, 'token');
+  console.log ({user, id, mdContent});
   if (user && id) {
     try {
       const updatedTask = await prisma.task.update ({
         where: {id: parseInt (id)},
-        data: {endDate, place, mdContent},
+        data: {mdContent},
       });
       res.json (updatedTask);
     } catch (error) {
@@ -79,7 +80,7 @@ routes.put ('/', async (req, res) => {
   }
 });
 routes.delete ('/', async (req, res) => {
-  const {id} = req.params;
+  const {id} = req.query;
   const user = jwt.verify (_token, 'token');
   if (user && id) {
     try {
